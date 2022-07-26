@@ -1,3 +1,11 @@
+/**
+ * Bien estructurado el código
+ * Bien documentado el código 
+ * Falta funcionalidad de redondeo de notas si el decimal es .95
+ * Evitar que una materia ya registrada se pueda registrar de nuevo
+ * Avance --->95%
+ */
+
 window.addEventListener('load', (e) => {
     /**
      * Clase asigantura
