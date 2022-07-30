@@ -1,104 +1,167 @@
-window.addEventListener('load', (e) => {
-    /**
-     * Clase asigantura
-     */
-    class Asignatura {
-        /**
-         * @param {String} nombre El nombe de la asigantura
-         * @param {Number} primerPrevio  nota primer examen 
-         * @param {Number} segundoPrevio  nota segundo examen
-         * @param {Number} tercerPrevio  nota tercer examen
-         * @param {Number} examenFinal  nota examen final 
-         */
-        constructor(nombre, primerPrevio, segundoPrevio, tercerPrevio, examenFinal) {
-            this.nombre = nombre;
-            this.primerPrevio = primerPrevio;
-            this.segundoPrevio = segundoPrevio;
-            this.tercerPrevio = tercerPrevio;
-            this.examenFinal = examenFinal;
-        }
+window.addEventListener("load", (e) => {
 
-        /**
-         * funcion visualizar objeto
-         * @returns {Asignatura} devuelve datos del objeto
-         */
-        toString() {
-            return this;
-        }
+
+    /**
+   * Clase asigantura
+   */
+  class Asignatura {
+    /**
+     * @param {String} nombre El nombe de la asigantura
+     * @param {Number} primerPrevio  nota primer examen
+     * @param {Number} segundoPrevio  nota segundo examen
+     * @param {Number} tercerPrevio  nota tercer examen
+     * @param {Number} examenFinal  nota examen final
+     */
+    constructor(
+      nombre,
+      primerPrevio,
+      segundoPrevio,
+      tercerPrevio,
+      examenFinal
+    ) {
+      this.nombre = nombre;
+      this.primerPrevio = primerPrevio;
+      this.segundoPrevio = segundoPrevio;
+      this.tercerPrevio = tercerPrevio;
+      this.examenFinal = examenFinal;
     }
 
     /**
-     *@type {array<Asignatura>} listado de asignaturas
+     * funcion visualizar objeto
+     * @returns {Asignatura} devuelve datos del objeto
      */
-    let arrayAsignatura = Array();
-
-
-    /**
-     * funcion añadir una nueva asigantura
-     * @param {Asignatura} info cantidad de asignaturas nuevas 
-     * @returns {boolean} retorna true si fue añadido. false sino lo fue.
-     */
-    function crearAsignatura(info) {
-        if (info != undefined) {
-            arrayAsignatura.push(info);
-            return true;
-        } else {
-            return false;
-        }
+    toString() {
+      return this;
     }
+  }
 
-    /**
-     * Evento click 
-     */
-    boton.addEventListener('click', (e) => {
-        var nombre = document.getElementById("nombre").value;
-        var primerPrevio = document.getElementById("primerPrevio").value;
-        var segundoPrevio = document.getElementById("segundoPrevio").value;
-        var tercerPrevio = document.getElementById("tercerPrevio").value;
-        var examenFinal = document.getElementById("examenFinal").value;
-        if (nombre != "" && primerPrevio != "" && segundoPrevio != "" && tercerPrevio != "" && examenFinal != "") {
-            let resultado = crearAsignatura(new Asignatura(nombre, primerPrevio, segundoPrevio, tercerPrevio, examenFinal));
-            if (resultado == true) {
-                alert("Asignatura añadida correctamente");
-                calcularNota();
-                visualizarArray();
-                cargarTabla()
-            } else {
-                alert("Asignatura no añadida");
-            }
 
-        } else {
-            alert("Asignatura no añadida");
-        }
-    });
+  /**
+   *@type {array<Asignatura>} listado de asignaturas
+   */
+  let arrayAsignatura = Array();
 
-    /**
-     * Funcion visualizar vector
-     * @returns {void}
-     */
-    function visualizarArray() {
-        console.log(arrayAsignatura)
+  /**
+   * cargando datos en local
+   */
+  cargarlocal();
+
+  /**
+   * Funcion cargar vector alamacenado en localStorage
+   * @returns {void}
+   */
+   function cargarlocal(){
+    var datos= JSON.parse(localStorage.getItem('arrayAsignatura'));
+    if(datos !=null){
+        arrayAsignatura = datos;   
+        calcularNota();
+        visualizarArray();
+        cargarTabla();
+
     }
+    // arrayAsignatura = JSON.parse(localStorage.getItem('arrayAsignatura'));
+  }
 
-    /**
-     * funcion calcular nota
-     * @returns {void} 
-     */
-    function calcularNota() {
-        if (arrayAsignatura != undefined) {
-            arrayAsignatura.forEach((info) => {
-                let calculo = (((Number(info.primerPrevio) + Number(info.segundoPrevio) + Number(info.tercerPrevio)) / 3) * 0.7) + Number(info.examenFinal) * 0.3;
-                info.definitiva = Math.ceil(calculo);
-            });
-        }
+  /**
+   * funcion sobre escribir localStorage
+   * @param {Asignatura} info asignatura a almacenar
+   * @returns {boolean} retorna true si fue añadido. false sino lo fue.
+   */
+  function almacenarLocalStorage() {
+    if (typeof localStorage != "null") {
+        localStorage.setItem('arrayAsignatura',JSON.stringify(arrayAsignatura));   
+        return true;
+    } else {
+      return false;
     }
+  }
 
-    /**
-     * funcion cargar tabla en index html
-     * @returns {void}
-     */
-    function cargarTabla() {
-        let tmp = ` 
+  /**
+   * funcion añadir una nueva asigantura
+   * @param {Asignatura} info cantidad de asignaturas nuevas
+   * @returns {boolean} retorna true si fue añadido. false sino lo fue.
+   */
+  function crearAsignatura(info) {
+    if (info != undefined) {
+      arrayAsignatura.push(info);
+      almacenarLocalStorage();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Evento click
+   */
+  boton.addEventListener("click", (e) => {
+    var nombre = document.getElementById("nombre").value;
+    var primerPrevio = document.getElementById("primerPrevio").value;
+    var segundoPrevio = document.getElementById("segundoPrevio").value;
+    var tercerPrevio = document.getElementById("tercerPrevio").value;
+    var examenFinal = document.getElementById("examenFinal").value;
+    if (
+      nombre != "" &&
+      primerPrevio != "" &&
+      segundoPrevio != "" &&
+      tercerPrevio != "" &&
+      examenFinal != ""
+    ) {
+      let resultado = crearAsignatura(
+        new Asignatura(
+          nombre,
+          primerPrevio,
+          segundoPrevio,
+          tercerPrevio,
+          examenFinal
+        )
+      );
+      if (resultado == true) {
+        alert("Asignatura añadida correctamente");
+        calcularNota();
+        visualizarArray();
+        cargarTabla();
+      } else {
+        alert("Asignatura no añadida");
+      }
+    } else {
+      alert("Asignatura no añadida");
+    }
+  });
+
+  /**
+   * Funcion visualizar vector
+   * @returns {void}
+   */
+  function visualizarArray() {
+    console.log(arrayAsignatura);
+  }
+
+  /**
+   * funcion calcular nota
+   * @returns {void}
+   */
+  function calcularNota() {
+    if (arrayAsignatura != undefined) {
+      arrayAsignatura.forEach((info) => {
+        let calculo =
+          ((Number(info.primerPrevio) +
+            Number(info.segundoPrevio) +
+            Number(info.tercerPrevio)) /
+            3) *
+            0.7 +
+          Number(info.examenFinal) * 0.3;
+        info.definitiva = Math.ceil(calculo);
+      });
+    }
+  }
+
+  /**
+   * funcion cargar tabla en index html
+   * @returns {void}
+   */
+  function cargarTabla() {
+    let tmp = ` 
         <thead>
                     <tr>
                         <th scope="col">Nombre</th>
@@ -107,13 +170,14 @@ window.addEventListener('load', (e) => {
                         <th scope="col">Tercer previo</th>
                         <th scope="col">Examen Final</th>
                         <th scope="col">Definitiva</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
         <tbody>
         `;
 
-        arrayAsignatura.map((info) => {
-            tmp += `
+    arrayAsignatura.map((info) => {
+      tmp += `
         <tr>
           <td>${info.nombre}</td>
           <td>${info.primerPrevio}</td>
@@ -121,32 +185,46 @@ window.addEventListener('load', (e) => {
           <td>${info.tercerPrevio}</td>
           <td>${info.examenFinal}</td>
           <td class="${cambiarColor(info.definitiva)}">${info.definitiva}</td>
+          <td> <div> 
+          <button id="botonCancelar" type="button" class="btn btn-danger botonCancelar">Cancelar</button>
+          </div>
+
+          <button id="botoninfo" type="button"  class="btn btn-info">Editar</button>
+          </td>
         </tr>
-       `
-        });
+       `;
+    });
 
-        tmp += `</tbody>`;
+    tmp += `</tbody>`;
 
-        const div = document.querySelector("table");
-        div.innerHTML = tmp;
+    const div = document.querySelector("table");
+    div.innerHTML = tmp;
+  }
+
+  /**
+   * Funcion cambio de color dependiendo la nota
+   * @param {Number} nota valor de la definitiva
+   * @returns {String} color que representa la nota
+   */
+  function cambiarColor(nota) {
+    let tmp = "";
+    if (nota != null) {
+      if (nota >= 0.0 && nota < 2.9) {
+        tmp = "bg-danger";
+      } else if (nota >= 3.0 && nota <= 3.9) {
+        tmp = "bg-warning";
+      } else if (nota >= 4.0) {
+        tmp = "bg-success";
+      }
     }
+    return tmp;
+  }
 
-    /**
-     * Funcion cambio de color dependiendo la nota
-     * @param {Number} nota valor de la definitiva
-     * @returns {String} color que representa la nota
-     */
-    function cambiarColor(nota) {
-        let tmp = "";
-        if (nota != null) {
-            if (nota >= 0.0 && nota < 2.9) {
-                tmp = "bg-danger";
-            } else if (nota >= 3.0 && nota <= 3.9) {
-                tmp = "bg-warning";
-            } else if (nota >= 4.0) {
-                tmp = "bg-success";
-            }
-        }
-        return tmp;
-    }
+
+
+const cancelar = document.querySelector("#botonCancelar");
+cancelar.addEventListener("click", (e)=>{
+console.log("datos");
+});
+
 });
