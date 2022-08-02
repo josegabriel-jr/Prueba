@@ -1,7 +1,5 @@
-window.addEventListener("load", (e) => {
-
-
-    /**
+//window.addEventListener("load", (e) => {
+  /**
    * Clase asigantura
    */
   class Asignatura {
@@ -35,7 +33,6 @@ window.addEventListener("load", (e) => {
     }
   }
 
-
   /**
    *@type {array<Asignatura>} listado de asignaturas
    */
@@ -50,14 +47,13 @@ window.addEventListener("load", (e) => {
    * Funcion cargar vector alamacenado en localStorage
    * @returns {void}
    */
-   function cargarlocal(){
-    var datos= JSON.parse(localStorage.getItem('arrayAsignatura'));
-    if(datos !=null){
-        arrayAsignatura = datos;   
-        calcularNota();
-        visualizarArray();
-        cargarTabla();
-
+  function cargarlocal() {
+    var datos = JSON.parse(localStorage.getItem("arrayAsignatura"));
+    if (datos != null) {
+      arrayAsignatura = datos;
+      calcularNota();
+      visualizarArray();
+      cargarTabla();
     }
     // arrayAsignatura = JSON.parse(localStorage.getItem('arrayAsignatura'));
   }
@@ -69,8 +65,8 @@ window.addEventListener("load", (e) => {
    */
   function almacenarLocalStorage() {
     if (typeof localStorage != "null") {
-        localStorage.setItem('arrayAsignatura',JSON.stringify(arrayAsignatura));   
-        return true;
+      localStorage.setItem("arrayAsignatura", JSON.stringify(arrayAsignatura));
+      return true;
     } else {
       return false;
     }
@@ -156,6 +152,7 @@ window.addEventListener("load", (e) => {
     }
   }
 
+
   /**
    * funcion cargar tabla en index html
    * @returns {void}
@@ -176,7 +173,7 @@ window.addEventListener("load", (e) => {
         <tbody>
         `;
 
-    arrayAsignatura.map((info) => {
+    arrayAsignatura.map((info,index) => {
       tmp += `
         <tr>
           <td>${info.nombre}</td>
@@ -185,9 +182,8 @@ window.addEventListener("load", (e) => {
           <td>${info.tercerPrevio}</td>
           <td>${info.examenFinal}</td>
           <td class="${cambiarColor(info.definitiva)}">${info.definitiva}</td>
-          <td> <div> 
-          <button id="botonCancelar" type="button" class="btn btn-danger botonCancelar">Cancelar</button>
-          </div>
+          <td> 
+          <button id="btncancelar" type="button" onclick="eliminar(${index})" class="btn btn-danger botonCancelar">Cancelar</button>
 
           <button id="botoninfo" type="button"  class="btn btn-info">Editar</button>
           </td>
@@ -200,6 +196,8 @@ window.addEventListener("load", (e) => {
     const div = document.querySelector("table");
     div.innerHTML = tmp;
   }
+
+
 
   /**
    * Funcion cambio de color dependiendo la nota
@@ -220,11 +218,41 @@ window.addEventListener("load", (e) => {
     return tmp;
   }
 
+/**
+ * funcion eliminar materia y visualizar
+ * @param {number} id identificador de la materia
+ * @param {Asignatura} info objeto el cual contiene la informacion
+ */
+  function eliminar(id){
+    let datos= arrayAsignatura.find((info,index )=>{
+     if(index==id){
+      return info;
+     }
+    });
 
 
-const cancelar = document.querySelector("#botonCancelar");
-cancelar.addEventListener("click", (e)=>{
-console.log("datos");
-});
+    let tmp= `
+      <div class="card" style="width: 18rem;">
+      <div class="card-body">
+      <h5 class="card-title">Asignatura: ${datos.nombre}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">Definitiva: ${datos.definitiva}</h6>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+    `
+    const div = document.querySelector("#card");
+    //console.log(div);
+    div.innerHTML= tmp;
+    cancelarAsignatura(id);
+  }
 
-});
+  /**
+   * funcion cancelar asignatura
+   */
+  function cancelarAsignatura(id){
+  arrayAsignatura.splice(id);
+  console.log(arrayAsignatura);
+
+
+  }
+
+//});
